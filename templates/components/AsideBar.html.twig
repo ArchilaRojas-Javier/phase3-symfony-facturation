@@ -1,6 +1,33 @@
-<div class='flex flex-col bg-white h-screen w-2xs' {{attributes}}>
-	<h1>hola bara de lado</h1>
-	<button class="flex items-center gap-2 border border-gray-300 p-1 rounded-lg">{{ ux_icon('lucide:log-out') }}
+<div class='flex flex-col bg-white h-screen w-2xs text-gray-600' >
+
+	<div class='flex items-center gap-2  p-4 mb-4'>
+		<twig:ux:Icon name="lucide:receipt" class="w-5 h-5 text-[#155DFC]"/>
+		<h1 class="text-lg font-bold text-blue-600	">FacturSaaS</h1>
+	</div>
+	<div class='flex flex-col gap-2 px-4 py-2'>
+		<a href="{{ path('app_dashboard') }}" class="flex items-center gap-2 border border-gray-300 p-1 rounded-lg">
+			{{ ux_icon('lucide:home') }}
+			<span>Dashboard</span>
+		</a>
+		{# <a href="{{ path('app_invoices') }}" class="flex items-center gap-2 border border-gray-300 p-1 rounded-lg"> #}
+		{{ ux_icon('lucide:file-text') }}
+		<span>Factures</span>
+		</a>
+		{# <a href="{{ path('app_customers') }}" class="flex items-center gap-2 border border-gray-300 p-1 rounded-lg"> #}
+		{{ ux_icon('lucide:users') }}
+		<span>Clients</span>
+		</a>
+		{# <a href="{{ path('app_products') }}" class="flex items-center gap-2 border border-gray-300 p-1 rounded-lg"> #}
+		{{ ux_icon('lucide:box') }}
+		<span>Produits</span>
+		</a>
+		<a href="{{ path('app_profile') }}" class="flex items-center gap-2 border border-gray-300 p-1 rounded-lg"> 
+		{{ ux_icon('lucide:settings') }}
+		Profil
+		</a>
+	</div>
+	<button class="flex items-center gap-2 border border-gray-300 p-1 rounded-lg">
+		{{ ux_icon('lucide:log-out') }}
 		<a href="{{ path('app_logout') }}">Deconnexion</a>
 	</button>
 </div>
