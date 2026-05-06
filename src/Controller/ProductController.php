@@ -30,23 +30,19 @@ final class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $entityManager->persist($product);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        $products = $entityManager->getRepository(Product::class)->findAll();
+
         return $this->render('product/new.html.twig', [
             'product' => $product,
             'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-    public function show(Product $product): Response
-    {
-        return $this->render('product/show.html.twig', [
-            'product' => $product,
+            'products' => $products,
         ]);
     }
 

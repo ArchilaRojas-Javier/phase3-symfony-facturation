@@ -3,9 +3,49 @@
 {% block title %}New Product{% endblock %}
 
 {% block body %}
-    <h1>Create new Product</h1>
+    <section class="flex h-screen w-full">
+        <twig:AsideBar/>
+        <main class="flex flex-col w-full p-8 gap-6 text-gray-500">
 
-    {{ include('product/_form.html.twig') }}
+            <div class='flex flex-col items-center gap-6 mb-15'>
+                <h1 class='text-2xl font-bold text-black'>AJOUTER UN PRODUIT OU SERVICE</h1>
+                 {{ include('product/_form.html.twig') }}
+            </div>
 
-    <a href="{{ path('app_product_index') }}">back to list</a>
+            <div class='flex max-w-full justify-center'>
+			    <h1 class='text-2xl font-bold text-black'>Produits & Services existants</h1>
+		        
+            </div>
+			<div class="border border-gray-200 rounded-md py-4 bg-white shadow-sm w-full overflow-x-auto"> 
+                <table class="table w-full">
+                    <thead class='border-b border-gray-200'>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Prix unitaire</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.description }}</td>
+                                <td>{{ product.price }}/{{ product.unit.value }}</td>
+                                
+                                <td>
+                                    <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="text-blue-500 hover:text-blue-700">{{ ux_icon('lucide:edit-2') }}</a>
+                                    <a href="{{ path('app_product_delete', {'id': product.id}) }}" class="text-red-500 hover:text-red-700">{{ ux_icon('lucide:trash-2') }}</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4">no records found</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </section>
 {% endblock %}
