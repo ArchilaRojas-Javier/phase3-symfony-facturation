@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enums\UnitsEnum;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,6 +25,9 @@ class Product
 
     #[ORM\ManyToOne(inversedBy: 'product')]
     private ?InvoiceItem $invoiceItem = null;
+
+    #[ORM\Column(enumType: UnitsEnum::class)]
+    private ?UnitsEnum $unit = null;
 
     public function getId(): ?int
     {
@@ -74,6 +78,18 @@ class Product
     public function setInvoiceItem(?InvoiceItem $invoiceItem): static
     {
         $this->invoiceItem = $invoiceItem;
+
+        return $this;
+    }
+
+    public function getUnit(): ?UnitsEnum
+    {
+        return $this->unit;
+    }
+
+    public function setUnit(UnitsEnum $unit): static
+    {
+        $this->unit = $unit;
 
         return $this;
     }

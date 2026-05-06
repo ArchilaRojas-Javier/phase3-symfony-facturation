@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enums\StatusEnum;
 use App\Repository\InvoiceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -32,6 +33,9 @@ class Invoice
      */
     #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'invoice')]
     private Collection $invoiceItems;
+
+    #[ORM\Column(enumType: StatusEnum::class)]
+    private ?StatusEnum $status = null;
 
     public function __construct()
     {
@@ -117,6 +121,18 @@ class Invoice
                 $invoiceItem->setInvoice(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?StatusEnum
+    {
+        return $this->status;
+    }
+
+    public function setStatus(StatusEnum $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }
