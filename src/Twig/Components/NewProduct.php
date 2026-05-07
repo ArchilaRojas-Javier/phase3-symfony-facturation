@@ -12,7 +12,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use App\Entity\Product;
 use App\Form\ProductType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\UX\LiveComponent\Attribute\LiveArg;
+use Symfony\Entity\User;
 
 #[AsLiveComponent]
 final class NewProduct extends AbstractController
@@ -39,11 +39,13 @@ final class NewProduct extends AbstractController
     {
 
         $this->submitForm();
+        $user = $this->getUser();
 
         $form = $this->getForm();
         if ($form->isValid()) {
             /** @var Product $product */
             $product = $form->getData();
+            $product->setUser($user);
             $this->entityManagerInterface->persist($product);
             $this->entityManagerInterface->flush();
 
@@ -53,6 +55,6 @@ final class NewProduct extends AbstractController
     }
     public function getAllProducts(): array
     {
-        return $this->productRepository->findAll();
+        return $this->productRepository->findby(['user' => $this->getUser()]);
     }
 }
