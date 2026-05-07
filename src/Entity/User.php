@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -47,6 +49,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable:true)]
     private ?string $siret = null;
+
+    /**
+     * @var Collection<int, Client>
+     */
+    #[ORM\OneToMany(targetEntity: Client::class, mappedBy: 'user')]
+    private Collection $client;
+
+    /**
+     * @var Collection<int, Invoice>
+     */
+    #[ORM\OneToMany(targetEntity: Invoice::class, mappedBy: 'user')]
+    private Collection $invoice;
+
+    public function __construct()
+    {
+        $this->client = new ArrayCollection();
+        $this->invoice = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -179,6 +199,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSiret(string $siret): static
     {
         $this->siret = $siret;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Client>
+     */
+    public function getClient(): Collection
+    {
+        return $this->client;
+    }
+
+    public function addClient(Client $client): static
+    {
+        if (!$this->client->contains($client)) {
+            $this->client->add($client);
+            $client->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClient(Client $client): static
+    {
+        if ($this->client->removeElement($client)) {
+            // set the owning side to null (unless already changed)
+            if ($client->getUser() === $this) {
+                $client->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Invoice>
+     */
+    public function getInvoice(): Collection
+    {
+        return $this->invoice;
+    }
+
+    public function addInvoice(Invoice $invoice): static
+    {
+        if (!$this->invoice->contains($invoice)) {
+            $this->invoice->add($invoice);
+            $invoice->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): static
+    {
+        if ($this->invoice->removeElement($invoice)) {
+            // set the owning side to null (unless already changed)
+            if ($invoice->getUser() === $this) {
+                $invoice->setUser(null);
+            }
+        }
 
         return $this;
     }
