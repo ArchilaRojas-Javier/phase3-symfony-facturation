@@ -5,14 +5,11 @@
 {% block body %}
     <section class="flex h-screen w-full">
         <twig:AsideBar/>
-        <main class="flex flex-col w-full p-8 gap-6 text-gray-500">
-            <h1>Edit Product</h1>
-
-            {{ include('product/_form.html.twig', {'button_label': 'Update'}) }}
-
-            <a href="{{ path('app_product_index') }}">back to list</a>
-
-            {{ include('product/_delete_form.html.twig') }}
+        <main class="flex flex-col w-full p-8 gap-6 text-gray-500 items-center justify-center">
+            <div class=' flex flex-col gap-6 '>    
+                {{ include('product/_form.html.twig', {'form_title': product.name,
+                 'form_label': 'Modifier le produit'}) }}
+            </div>
         </main>
     </section>
 {% endblock %}

@@ -35,7 +35,12 @@
                                 
                                 <td class='flex gap-4 px-4 py-2 align-middle whitespace-nowrap'>
                                     <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="text-blue-500 hover:text-blue-700">{{ ux_icon('lucide:edit-2') }}</a>
-                                    <a href="{{ path('app_product_delete', {'id': product.id}) }}" class="text-red-500 hover:text-red-700">{{ ux_icon('lucide:trash-2') }}</a>
+                                    
+                                    <form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                                    <button class="btn text-red-500 hover:text-red-700">{{ ux_icon('lucide:trash-2') }}</button>
+                                    </form>
+                                    
                                 </td>
                             </tr>
                         {% else %}
