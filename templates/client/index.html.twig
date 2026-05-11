@@ -31,7 +31,7 @@
 						{% for client in clients %}
 							<tr>
 								<td class='px-4 py-2 align-middle'>{{ client.name }}</td>
-								<td class='px-4 py-2 align-middle'>{{ client.email }}{{ client.phone }}</td>
+								<td class='px-4 py-2 align-middle'>{{ client.email }}<span class="block">{{ client.phone }}</span></td>
 								<td class='px-4 py-2 align-middle'>{{ client.address }}</td>
 
 								<td class='flex gap-4 px-4 py-2 align-middle whitespace-nowrap'>
