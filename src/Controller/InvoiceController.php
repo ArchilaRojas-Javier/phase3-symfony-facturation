@@ -10,15 +10,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
+
+#[IsGranted('ROLE_USER')]
 #[Route('/invoice')]
 final class InvoiceController extends AbstractController
 {
     #[Route(name: 'app_invoice_index', methods: ['GET'])]
     public function index(InvoiceRepository $invoiceRepository): Response
     {
+        $user = $this->getUser();
+        $invoices = $invoiceRepository->findBy(['user' => $user]);
         return $this->render('invoice/index.html.twig', [
-            'invoices' => $invoiceRepository->findAll(),
+            'invoices' => $invoices,
         ]);
     }
 

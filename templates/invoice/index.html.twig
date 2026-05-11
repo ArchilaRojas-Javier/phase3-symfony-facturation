@@ -1,41 +1,63 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Invoice index{% endblock %}
+{% block title %}Invoice{% endblock %}
 
 {% block body %}
-    <h1>Invoice index</h1>
+<section class="flex h-screen w-full">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Number</th>
-                <th>Total_ttc</th>
-                <th>Created_at</th>
-                <th>Status</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for invoice in invoices %}
-            <tr>
-                <td>{{ invoice.id }}</td>
-                <td>{{ invoice.number }}</td>
-                <td>{{ invoice.totalTtc }}</td>
-                <td>{{ invoice.createdAt ? invoice.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ invoice.status }}</td>
-                <td>
-                    <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}">show</a>
-                    <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+		<twig:AsideBar/>
 
-    <a href="{{ path('app_invoice_new') }}">Create new</a>
+		<main class="flex flex-col w-full p-8 gap-6 text-gray-500">
+            
+            <div class='flex max-w-full justify-between'>
+			    <h1 class='text-2xl font-bold text-black'>Produits & Services</h1>
+		        <button class='btn bg-blue-500 text-white h-10 p-2 rounded-md'>
+                <a href="{{ path('app_invoice_new') }}"> + Ajouter une facture</a>
+                </button>
+            </div>
+			<div class="border border-gray-200 rounded-md py-4 bg-white shadow-sm w-full overflow-x-auto"> 
+                <table class="table-auto w-full">
+                    <thead class='border-b border-gray-200'>
+                        <tr>
+                            <th>Numéro</th>
+                            <th>Date</th>
+                            <th>Client</th>
+                            <th>Total TTC</th>
+                            <th>Status</th>
+                            <th>actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for invoice in invoices %}
+                            <tr>
+                                <td>{{ invoice.number }}</td>
+                                <td>{{ invoice.date ? invoice.date|date('Y-m-d') : '' }}</td>
+                                <td>{{ invoice.client.name }}</td>
+                                <td>{{ invoice.totalTtc }}</td>
+                                <td>{{ invoice.status }}</td>
+                                
+                                <td class='flex gap-4 px-4 py-2 align-middle whitespace-nowrap'>
+
+                                    <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}">show</a>
+
+                                    <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}" class="text-blue-500 hover:text-blue-700">{{ ux_icon('lucide:edit-2') }}</a>
+                                    
+                                    <form method="post" action="{{ path('app_invoice_delete', {'id': invoice.id}) }}">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ invoice.id) }}">
+                                        <button class="btn text-red-500 hover:text-red-700">{{ ux_icon('lucide:trash-2') }}</button>
+                                    </form>
+                                    
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4">no records found</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+	    </main>
+    </section>
 {% endblock %}
