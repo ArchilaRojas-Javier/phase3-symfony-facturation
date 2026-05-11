@@ -37,6 +37,10 @@ class Invoice
     #[ORM\Column(enumType: StatusEnum::class)]
     private ?StatusEnum $status = null;
 
+    #[ORM\ManyToOne(inversedBy: 'invoice')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Client $client = null;
+
     public function __construct()
     {
         $this->invoiceItems = new ArrayCollection();
@@ -96,7 +100,7 @@ class Invoice
     }
 
     /**
-     * @return Collection<int, InvoiceItem>
+$     * @return Collection<int, InvoiceItem>
      */
     public function getInvoiceItems(): Collection
     {
@@ -133,6 +137,18 @@ class Invoice
     public function setStatus(StatusEnum $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getClient(): ?Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(?Client $client): static
+    {
+        $this->client = $client;
 
         return $this;
     }

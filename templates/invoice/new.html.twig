@@ -1,11 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Invoice{% endblock %}
+{% block title %}New Facture{% endblock %}
 
 {% block body %}
-    <h1>Create new Invoice</h1>
-
-    {{ include('invoice/_form.html.twig') }}
-
-    <a href="{{ path('app_invoice_index') }}">back to list</a>
+    <section class="flex h-screen w-full">
+        <twig:AsideBar/>
+        <main class="flex flex-col w-full p-8 gap-6 text-gray-500">
+            
+            <a href="{{ path('app_invoice_index') }}" class="flex items-center gap-2 hover:text-blue-700">
+                {{ ux_icon('lucide:arrow-left') }}
+                <span>Retour aux factures</span>
+            </a>
+            {{ include('invoice/_form.html.twig') }}
+        </main>
+    </section>
 {% endblock %}

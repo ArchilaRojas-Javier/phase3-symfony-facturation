@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Invoice;
+use Symfony\Component\Security\Core\User\UserInterface;
 use App\Form\InvoiceType;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -34,8 +35,12 @@ final class InvoiceController extends AbstractController
         $invoice = new Invoice();
         $form = $this->createForm(InvoiceType::class, $invoice);
         $form->handleRequest($request);
+        $user = $this->getUser();
+        $client = $user->getClient();
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $invoice->setUser($user);
+            $invoice->setClient($client);
             $entityManager->persist($invoice);
             $entityManager->flush();
 
@@ -45,6 +50,7 @@ final class InvoiceController extends AbstractController
         return $this->render('invoice/new.html.twig', [
             'invoice' => $invoice,
             'form' => $form,
+            ''
         ]);
     }
 
