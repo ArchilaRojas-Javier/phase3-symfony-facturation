@@ -3,9 +3,12 @@
 {% block title %}New Client{% endblock %}
 
 {% block body %}
-    <h1>Create new Client</h1>
-
-    {{ include('client/_form.html.twig') }}
-
-    <a href="{{ path('app_client_index') }}">back to list</a>
+     <section class="flex h-screen w-full">
+        <twig:AsideBar/>
+        
+        <main class="flex flex-col w-full p-8 gap-6 text-gray-500">
+            {{ component('NewClient') }}
+        </main>
+        
+    </section>
 {% endblock %}

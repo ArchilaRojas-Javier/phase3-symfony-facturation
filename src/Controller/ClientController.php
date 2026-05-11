@@ -10,44 +10,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 #[Route('/client')]
+#[IsGranted('ROLE_USER')]
 final class ClientController extends AbstractController
 {
     #[Route(name: 'app_client_index', methods: ['GET'])]
     public function index(ClientRepository $clientRepository): Response
     {
+        $user = $this->getUser();
+        $clients = $clientRepository->findBy(['user' => $user]);
         return $this->render('client/index.html.twig', [
-            'clients' => $clientRepository->findAll(),
+            'clients' => $clients,
         ]);
     }
 
-    #[Route('/new', name: 'app_client_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new', name: 'app_client_new')]
+
+    public function new(): Response
     {
-        $client = new Client();
-        $form = $this->createForm(ClientType::class, $client);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($client);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('client/new.html.twig', [
-            'client' => $client,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_client_show', methods: ['GET'])]
-    public function show(Client $client): Response
-    {
-        return $this->render('client/show.html.twig', [
-            'client' => $client,
-        ]);
+        return $this->render('client/new.html.twig', []);
     }
 
     #[Route('/{id}/edit', name: 'app_client_edit', methods: ['GET', 'POST'])]
@@ -57,6 +41,7 @@ final class ClientController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $client->setUser($this->getUser());
             $entityManager->flush();
 
             return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);

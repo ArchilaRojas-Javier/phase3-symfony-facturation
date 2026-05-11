@@ -18,10 +18,7 @@ class ProductType extends AbstractType
             ->add('description')
             ->add('price')
             ->add('unit')
-            // ->add('invoiceItem', EntityType::class, [
-            //     'class' => InvoiceItem::class,
-            //     'choice_label' => 'id',
-            // ])
+            
         ;
     }
 
