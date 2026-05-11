@@ -25,10 +25,10 @@ class Client
     #[ORM\Column(length: 255)]
     private ?string $address = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $siret = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $iban = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'client')]

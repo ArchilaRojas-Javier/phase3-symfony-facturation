@@ -29,6 +29,9 @@ class Product
     #[ORM\Column(enumType: UnitsEnum::class)]
     private ?UnitsEnum $unit = null;
 
+    #[ORM\ManyToOne(inversedBy: 'product')]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -90,6 +93,18 @@ class Product
     public function setUnit(UnitsEnum $unit): static
     {
         $this->unit = $unit;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
