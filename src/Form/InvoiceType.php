@@ -3,22 +3,28 @@
 namespace App\Form;
 
 use App\Entity\Invoice;
-use App\Entity\User;
 use App\Entity\Client;
+use App\Entity\Product;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Repository\ClientRepository;
-use App\Repository\UserRepository;
-use Symfony\Bundle\SecurityBundle\Security\UserAuthenticator;
+use App\Repository\ProductRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class InvoiceType extends AbstractType
 {
-    
+    private Security $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $user = $options['user'];
+        $user = $this->security->getUser();
         $builder
             
             ->add('client', EntityType::class,[
@@ -31,21 +37,18 @@ class InvoiceType extends AbstractType
                         ->orderBy('c.name', 'ASC');
                 },
             ])
-            ->add('created_at', null, [
-                'widget' => 'single_text',
-                'html5' => true,
-                'label' => 'Date de la facture',
-            ])
-            //->add('status')
+           
             
-        ;
+           
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Invoice::class,
-            'user' => null,
         ]);
     }
 }
+
+        

@@ -24,18 +24,18 @@ class Invoice
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
+    
+    #[ORM\Column(enumType: StatusEnum::class)]
+    private StatusEnum $status = StatusEnum::DRAFT;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'invoice')]
     private ?User $user = null;
-
+    
     /**
      * @var Collection<int, InvoiceItem>
      */
     #[ORM\OneToMany(targetEntity: InvoiceItem::class, mappedBy: 'invoice')]
     private Collection $invoiceItems;
-
-    #[ORM\Column(enumType: StatusEnum::class)]
-    private ?StatusEnum $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoice')]
     #[ORM\JoinColumn(nullable: false)]
@@ -44,6 +44,7 @@ class Invoice
     public function __construct()
     {
         $this->invoiceItems = new ArrayCollection();
+        $this->created_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -100,7 +101,7 @@ class Invoice
     }
 
     /**
-$     * @return Collection<int, InvoiceItem>
+     * @return Collection<int, InvoiceItem>
      */
     public function getInvoiceItems(): Collection
     {

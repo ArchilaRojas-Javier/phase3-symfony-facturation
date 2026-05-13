@@ -2,6 +2,7 @@
 
 namespace App\Twig\Components;
 
+use App\Entity\InvoiceItem;
 use App\Repository\InvoiceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -10,6 +11,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use App\Entity\Invoice;
+use App\Entity\Product;
 use App\Form\InvoiceType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -26,19 +28,30 @@ final class NewInvoice
     use ComponentWithFormTrait;
 
     #[LiveProp(writable: true, fieldName : 'invoiceForm')]
-    public ?Invoice $invoice =null;
+    public Invoice $invoice;
+
+    public Product $currentNewProduct;
 
     public function __construct(
         private InvoiceRepository $invoiceRepository,
         private EntityManagerInterface $entityManagerInterface,
         private FormFactoryInterface $formFactoryInterface,
         private Security $security
-    ) {}
+    ) {
+        $this->invoice = new Invoice();
+        $this->currentNewProduct = new Product();
+    }
+
+    // #[LiveAction]
+    // public function addProduct(){
+    //     $invoiceItem = new InvoiceItem();
+    //     $invoiceItem->addProduct($this->currentNewProduct);
+    //     $this->invoice->addInvoiceItem($invoiceItem);
+    // }
 
     protected function instantiateForm(): \Symfony\Component\Form\FormInterface
     {
-        $invoice = $this->invoice ?? new Invoice();
-        return $this->formFactoryInterface->create(InvoiceType::class, $invoice);
+        return $this->formFactoryInterface->create(InvoiceType::class, $this->invoice);
     }
 
     #[LiveAction]
