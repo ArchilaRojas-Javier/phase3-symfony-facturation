@@ -15,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 
 
-#[IsGranted('ROLE_USER')]
+#[IsGranted('ROLE_USER')]   
 #[Route('/invoice')]
 final class InvoiceController extends AbstractController
 {
@@ -23,7 +23,7 @@ final class InvoiceController extends AbstractController
     public function index(InvoiceRepository $invoiceRepository): Response
     {
         $user = $this->getUser();
-        $invoices = $invoiceRepository->findBy(['user' => $user]);
+        $invoices = $invoiceRepository->findBy(['user' => $user], ['created_at' => 'DESC']);
         return $this->render('invoice/index.html.twig', [
             'invoices' => $invoices,
         ]);
@@ -32,25 +32,31 @@ final class InvoiceController extends AbstractController
     #[Route('/new', name: 'app_invoice_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $invoice = new Invoice();
-        $form = $this->createForm(InvoiceType::class, $invoice);
-        $form->handleRequest($request);
         $user = $this->getUser();
-        $client = $user->getClient();
+        
+        $invoice = new Invoice();
+        $form = $this->createForm(InvoiceType::class, $invoice, [
+            'user' => $user,
+        ]);
+        //$client = $form->get('client')->getData();
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $invoice->setUser($user);
-            $invoice->setClient($client);
+           // $invoice->setClient($client);
             $entityManager->persist($invoice);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_invoice_index', [], Response::HTTP_SEE_OTHER);
         }
 
+    
+
         return $this->render('invoice/new.html.twig', [
-            'invoice' => $invoice,
+            //'invoice' => $invoice,
             'form' => $form,
-            ''
+        
+
         ]);
     }
 
