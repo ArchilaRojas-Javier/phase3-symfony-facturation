@@ -3,7 +3,6 @@
 namespace App\Twig\Components;
 
 use App\Repository\ProductRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -12,10 +11,15 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use App\Entity\Product;
 use App\Form\ProductType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+
+#[IsGranted('ROLE_USER')]
 
 #[AsLiveComponent]
-final class NewProduct extends AbstractController
+final class NewProduct
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;
@@ -25,13 +29,15 @@ final class NewProduct extends AbstractController
 
     public function __construct(
         private ProductRepository $productRepository,
-        private EntityManagerInterface $entityManagerInterface
+        private EntityManagerInterface $entityManagerInterface,
+        private FormFactoryInterface $formFactoryInterface,
+        private Security $security
     ) {}
 
     protected function instantiateForm(): \Symfony\Component\Form\FormInterface
     {
         $product = $this->product ?? new Product();
-        return $this->createForm(ProductType::class, $product);
+        return $this->formFactoryInterface->create(ProductType::class, $product);
     }
 
     #[LiveAction]
@@ -39,7 +45,7 @@ final class NewProduct extends AbstractController
     {
 
         $this->submitForm();
-        $user = $this->getUser();
+        $user = $this->security->getUser();
 
         $form = $this->getForm();
         if ($form->isValid()) {
@@ -55,6 +61,6 @@ final class NewProduct extends AbstractController
     }
     public function getAllProducts(): array
     {
-        return $this->productRepository->findby(['user' => $this->getUser()]);
+        return $this->productRepository->findby(['user' => $this->security->getUser()]);
     }
 }

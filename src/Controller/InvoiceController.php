@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Invoice;
-use Symfony\Component\Security\Core\User\UserInterface;
 use App\Form\InvoiceType;
 use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,35 +28,10 @@ final class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_invoice_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new', name: 'app_invoice_new')]
+    public function new(): Response
     {
-        $user = $this->getUser();
-        
-        $invoice = new Invoice();
-        $form = $this->createForm(InvoiceType::class, $invoice, [
-            'user' => $user,
-        ]);
-        //$client = $form->get('client')->getData();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $invoice->setUser($user);
-           // $invoice->setClient($client);
-            $entityManager->persist($invoice);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_invoice_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-    
-
-        return $this->render('invoice/new.html.twig', [
-            //'invoice' => $invoice,
-            'form' => $form,
-        
-
-        ]);
+       return $this->render('invoice/new.html.twig', []);
     }
 
     #[Route('/{id}', name: 'app_invoice_show', methods: ['GET'])]
