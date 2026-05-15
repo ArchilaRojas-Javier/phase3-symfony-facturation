@@ -29,6 +29,9 @@ class InvoiceItem
     #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'invoiceItem')]
     private Collection $product;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $productPrice = null;
+
     public function __construct()
     {
         $this->product = new ArrayCollection();
@@ -89,6 +92,18 @@ class InvoiceItem
                 $product->setInvoiceItem(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProductPrice(): ?float
+    {
+        return $this->productPrice;
+    }
+
+    public function setProductPrice(?float $productPrice): static
+    {
+        $this->productPrice = $productPrice;
 
         return $this;
     }

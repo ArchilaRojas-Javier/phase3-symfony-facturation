@@ -18,7 +18,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_USER')]
 
-#[AsLiveComponent]
+#[AsLiveComponent]    
 final class NewProduct
 {
     use DefaultActionTrait;
